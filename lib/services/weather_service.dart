@@ -8,12 +8,13 @@ import 'package:http/http.dart' as http;
 
 class WeatherService {
   static const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+  static const BASE_GEOCODING_URL =
+      "http://api.openweathermap.org/geo/1.0/reverse";
   final String apiKey;
 
   WeatherService(this.apiKey);
 
   Future<Weather> getWeather(String cityName) async {
-    print(cityName);
     final response = await http
         .get(Uri.parse('$BASE_URL?q=$cityName&appid=$apiKey&units=metric'));
 
@@ -24,7 +25,7 @@ class WeatherService {
     }
   }
 
-  Future<String> getCurrentCity() async {
+  Future<String> getCurrentCityName() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -33,11 +34,14 @@ class WeatherService {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    final response = await http.get(Uri.parse(
+        '$BASE_GEOCODING_URL?lat=${position.latitude}&lon=${position.longitude}&limit=1&appid=$apiKey'));
 
-    String? city = placemarks[0].locality;
-
-    return city ?? "";
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      return body[0]['name'];
+    } else {
+      return "";
+    }
   }
 }

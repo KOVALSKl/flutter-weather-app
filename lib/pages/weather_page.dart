@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_app/models/weather_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
+import 'package:lottie/lottie.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -14,7 +15,7 @@ class _WeatherPageState extends State<WeatherPage> {
   Weather? _weather;
 
   _fetchWeather() async {
-    String cityName = await _weatherService.getCurrentCity();
+    String cityName = await _weatherService.getCurrentCityName();
 
     try {
       final weather = await _weatherService.getWeather(cityName);
@@ -41,6 +42,7 @@ class _WeatherPageState extends State<WeatherPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(_weather?.cityName ?? "loading city..."),
+        Lottie.asset('assets/mist.json'),
         Text("${_weather?.temperature.round()}°C")
       ],
     )));
