@@ -27,6 +27,30 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
+  String getWeatherAnimation(String? iconName) {
+    late String assetName;
+
+    switch (iconName) {
+      case "03d":
+      case "04d":
+        assetName = "02d";
+      case "03n":
+      case "04n":
+        assetName = "02n";
+      case "10d":
+        assetName = "11d";
+      case "10n":
+        assetName = "11n";
+      case "50d":
+      case "50n":
+        assetName = "50nd";
+      default:
+        assetName = iconName ?? "01d";
+    }
+
+    return "$assetName.json";
+  }
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +66,7 @@ class _WeatherPageState extends State<WeatherPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(_weather?.cityName ?? "loading city..."),
-        Lottie.asset('assets/mist.json'),
+        Lottie.asset(getWeatherAnimation(_weather?.iconName)),
         Text("${_weather?.temperature.round()}°C")
       ],
     )));
