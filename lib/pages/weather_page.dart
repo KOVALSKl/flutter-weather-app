@@ -101,9 +101,30 @@ class _WeatherPageState extends State<WeatherPage> {
           ),
           Lottie.asset(getWeatherAnimation(_weather?.iconName)),
           Text(
-            "${_weather?.temperature.round() ?? 0}°C",
+            "Temperature: ${_weather?.temperature.round() ?? 0}°C",
             style: GoogleFonts.montserrat(
-              fontSize: 25,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            "Feels like: ${_weather?.tempFeelsLike.round() ?? 0}°C",
+            style: GoogleFonts.montserrat(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            "Max Temperature: ${_weather?.maxTemp.round() ?? 0}°C",
+            style: GoogleFonts.montserrat(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            "Min Temperature: ${_weather?.minTemp.round() ?? 0}°C",
+            style: GoogleFonts.montserrat(
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           )
