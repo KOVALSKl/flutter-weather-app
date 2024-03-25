@@ -10,8 +10,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    final ThemeData themeData = ThemeData(useMaterial3: true);
+
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: themeData,
       home: WeatherPage(),
     );
   }
