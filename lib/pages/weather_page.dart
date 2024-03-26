@@ -1,10 +1,11 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_app/models/weather_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+
+const API_KEY = "7a1947745118a5fca6d8e156f4724528";
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -14,14 +15,15 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  final _weatherService = WeatherService("7a1947745118a5fca6d8e156f4724528");
+  final _weatherService = WeatherService(API_KEY);
   Weather? _weather;
+  late String currentDate;
 
   _fetchWeather(String? cityName) async {
     cityName = cityName ?? await _weatherService.getCurrentCityName();
 
     try {
-      final weather = await _weatherService.getWeather(cityName);
+      final weather = await _weatherService.getCurrentDayWeather(cityName);
       setState(() {
         _weather = weather;
       });
@@ -57,6 +59,10 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   void initState() {
     super.initState();
+
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat("dd MMMM yyyy");
+    currentDate = formatter.format(now);
 
     _fetchWeather(null);
   }
@@ -96,6 +102,13 @@ class _WeatherPageState extends State<WeatherPage> {
             _weather?.cityName ?? "loading city...",
             style: GoogleFonts.montserrat(
               fontSize: 30,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            "$currentDate ",
+            style: GoogleFonts.montserrat(
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),
