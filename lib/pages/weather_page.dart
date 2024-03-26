@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
+import '../widgets/current_weather_card.dart';
+
 const API_KEY = "7a1947745118a5fca6d8e156f4724528";
 
 class WeatherPage extends StatefulWidget {
@@ -97,51 +99,13 @@ class _WeatherPageState extends State<WeatherPage> {
           ),
         ),
         const SizedBox(height: 40),
-        Column(children: [
-          Text(
-            _weather?.cityName ?? "loading city...",
-            style: GoogleFonts.montserrat(
-              fontSize: 30,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            "$currentDate ",
-            style: GoogleFonts.montserrat(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Lottie.asset(getWeatherAnimation(_weather?.iconName)),
-          Text(
-            "Temperature: ${_weather?.temperature.round() ?? 0}°C",
-            style: GoogleFonts.montserrat(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            "Feels like: ${_weather?.tempFeelsLike.round() ?? 0}°C",
-            style: GoogleFonts.montserrat(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            "Max Temperature: ${_weather?.maxTemp.round() ?? 0}°C",
-            style: GoogleFonts.montserrat(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          Text(
-            "Min Temperature: ${_weather?.minTemp.round() ?? 0}°C",
-            style: GoogleFonts.montserrat(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          )
-        ])
+        SizedBox(
+            width: 350,
+            child: CurrentWeatherCard(
+              weather: _weather,
+              currentDate: currentDate,
+              weatherAnimation: getWeatherAnimation(_weather?.iconName),
+            ))
       ],
     )));
   }
