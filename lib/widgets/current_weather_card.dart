@@ -38,32 +38,32 @@ class CurrentWeatherCard extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        Lottie.asset(weatherAnimation, width: (isDesktop(context) ? 200 : 120)),
+        Lottie.asset(weatherAnimation, width: (isDesktop(context) ? 160 : 130)),
         Text(
           "Temperature: ${_weather?.temperature.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: (isDesktop(context)) ? 18 : 12,
+            fontSize: (isDesktop(context)) ? 18 : 14,
             fontWeight: FontWeight.w600,
           ),
         ),
         Text(
           "Feels like: ${_weather?.tempFeelsLike.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: (isDesktop(context)) ? 18 : 12,
+            fontSize: (isDesktop(context)) ? 18 : 14,
             fontWeight: FontWeight.w600,
           ),
         ),
         Text(
           "Max Temperature: ${_weather?.maxTemp.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: (isDesktop(context)) ? 18 : 12,
+            fontSize: (isDesktop(context)) ? 18 : 14,
             fontWeight: FontWeight.w600,
           ),
         ),
         Text(
           "Min Temperature: ${_weather?.minTemp.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: (isDesktop(context)) ? 18 : 12,
+            fontSize: (isDesktop(context)) ? 18 : 14,
             fontWeight: FontWeight.w600,
           ),
         )

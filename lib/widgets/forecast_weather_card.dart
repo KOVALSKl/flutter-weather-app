@@ -38,9 +38,9 @@ class ForecastWeatherCard extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          Lottie.asset(_animationName, width: (isDesktop(context)) ? 170 : 120),
+          Lottie.asset(_animationName, width: (isDesktop(context)) ? 130 : 100),
           Text(
-            "Temperature: ${_forecast.temperature.round()}°C",
+            "${_forecast.temperature.round()}°C feels ${_forecast.tempFeelsLike.round()}°C",
             style: GoogleFonts.montserrat(
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -60,13 +60,6 @@ class ForecastWeatherCard extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          Text(
-            "Feels like: ${_forecast.tempFeelsLike.round()}°C",
-            style: GoogleFonts.montserrat(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
-          )
         ],
       ),
     );

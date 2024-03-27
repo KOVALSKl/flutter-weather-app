@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_weather_app/models/weather_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
+import 'package:flutter_weather_app/utils/media_quaries.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -87,7 +88,7 @@ class _WeatherPageState extends State<WeatherPage> {
         assetName = iconName ?? "01d";
     }
 
-    return "images/$assetName.json";
+    return "$assetName.json";
   }
 
   @override
@@ -144,20 +145,24 @@ class _WeatherPageState extends State<WeatherPage> {
             )),
         const SizedBox(height: 30),
         SizedBox(
-          height: 300,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: _forecast.length,
-            itemBuilder: (context, index) {
-              return ForecastWeatherCard(
-                forecast: _forecast[index],
-                animationName: getWeatherAnimation(_forecast[index].iconName),
-              );
-            },
-            separatorBuilder: (context, index) => const SizedBox(width: 10),
-          ),
-        ),
+            height: 300,
+            width: (isDesktop(context)) ? 800 : 340,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: _forecast.length,
+                itemBuilder: (context, index) {
+                  return ForecastWeatherCard(
+                    forecast: _forecast[index],
+                    animationName:
+                        getWeatherAnimation(_forecast[index].iconName),
+                  );
+                },
+                separatorBuilder: (context, index) => const SizedBox(width: 20),
+              ),
+            )),
       ],
     )));
   }
