@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather_app/models/weather_model.dart';
+import 'package:flutter_weather_app/utils/media_quaries.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -33,11 +34,11 @@ class ForecastWeatherCard extends StatelessWidget {
           Text(
             getForecastDate(_forecast),
             style: GoogleFonts.montserrat(
-              fontSize: 16,
+              fontSize: (isDesktop(context)) ? 16 : 14,
               fontWeight: FontWeight.w600,
             ),
           ),
-          Lottie.asset(_animationName),
+          Lottie.asset(_animationName, width: (isDesktop(context)) ? 170 : 120),
           Text(
             "Temperature: ${_forecast.temperature.round()}°C",
             style: GoogleFonts.montserrat(

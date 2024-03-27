@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_weather_app/utils/media_quaries.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
@@ -26,7 +27,7 @@ class CurrentWeatherCard extends StatelessWidget {
         Text(
           _weather?.cityName ?? "loading city...",
           style: GoogleFonts.montserrat(
-            fontSize: 30,
+            fontSize: (isDesktop(context)) ? 30 : 20,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -37,32 +38,32 @@ class CurrentWeatherCard extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        Lottie.asset(weatherAnimation),
+        Lottie.asset(weatherAnimation, width: (isDesktop(context) ? 200 : 120)),
         Text(
           "Temperature: ${_weather?.temperature.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: 18,
+            fontSize: (isDesktop(context)) ? 18 : 12,
             fontWeight: FontWeight.w600,
           ),
         ),
         Text(
           "Feels like: ${_weather?.tempFeelsLike.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: 18,
+            fontSize: (isDesktop(context)) ? 18 : 12,
             fontWeight: FontWeight.w600,
           ),
         ),
         Text(
           "Max Temperature: ${_weather?.maxTemp.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: 18,
+            fontSize: (isDesktop(context)) ? 18 : 12,
             fontWeight: FontWeight.w600,
           ),
         ),
         Text(
           "Min Temperature: ${_weather?.minTemp.round() ?? 0}°C",
           style: GoogleFonts.montserrat(
-            fontSize: 18,
+            fontSize: (isDesktop(context)) ? 18 : 12,
             fontWeight: FontWeight.w600,
           ),
         )
