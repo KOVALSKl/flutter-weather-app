@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
-  static const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+  static const BASE_URL = "https://api.openweathermap.org/data/2.5/";
   static const BASE_GEOCODING_URL =
       "http://api.openweathermap.org/geo/1.0/reverse";
   final String apiKey;
@@ -15,8 +15,8 @@ class WeatherService {
   WeatherService(this.apiKey);
 
   Future<Weather> getCurrentDayWeather(String cityName) async {
-    final response = await http
-        .get(Uri.parse('$BASE_URL?q=$cityName&appid=$apiKey&units=metric'));
+    final response = await http.get(
+        Uri.parse('${BASE_URL}weather?q=$cityName&appid=$apiKey&units=metric'));
 
     if (response.statusCode == 200) {
       return Weather.fromJson(jsonDecode(response.body));
@@ -25,12 +25,15 @@ class WeatherService {
     }
   }
 
-  Future<Weather> getWeekForecast(String cityName) async {
-    final response = await http
-        .get(Uri.parse('$BASE_URL?q=$cityName&appid=$apiKey&units=metric'));
+  Future<List<ForecastWeather>> getWeekForecast(String cityName) async {
+    final response = await http.get(Uri.parse(
+        '${BASE_URL}forecast?q=$cityName&appid=$apiKey&units=metric'));
 
     if (response.statusCode == 200) {
-      return Weather.fromJson(jsonDecode(response.body));
+      var forecastList = (jsonDecode(response.body)['list'] as List)
+          .map((value) => ForecastWeather.fromJson(value))
+          .toList();
+      return forecastList;
     } else {
       throw Exception("Failed to load weather data");
     }

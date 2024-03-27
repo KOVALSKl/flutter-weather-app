@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_weather_app/models/weather_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../widgets/current_weather_card.dart';
+import '../widgets/forecast_weather_card.dart';
 
 const API_KEY = "7a1947745118a5fca6d8e156f4724528";
 
@@ -19,15 +22,44 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPageState extends State<WeatherPage> {
   final _weatherService = WeatherService(API_KEY);
   Weather? _weather;
+  List<ForecastWeather> _forecast = [];
+  String? _cityName;
   late String currentDate;
 
-  _fetchWeather(String? cityName) async {
-    cityName = cityName ?? await _weatherService.getCurrentCityName();
+  _fetchCityName() async {
+    String cityName = await _weatherService.getCurrentCityName();
+
+    setState(() {
+      _cityName = cityName;
+    });
+  }
+
+  _updateCityName(String value) {
+    setState(() {
+      _cityName = value;
+    });
+  }
+
+  _fetchCurrentWeather() async {
+    String cityName = _cityName ?? await _weatherService.getCurrentCityName();
 
     try {
       final weather = await _weatherService.getCurrentDayWeather(cityName);
       setState(() {
         _weather = weather;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _fetchWeekForecast() async {
+    String cityName = _cityName ?? await _weatherService.getCurrentCityName();
+
+    try {
+      final forecastList = await _weatherService.getWeekForecast(cityName);
+      setState(() {
+        _forecast = forecastList;
       });
     } catch (e) {
       print(e);
@@ -66,7 +98,9 @@ class _WeatherPageState extends State<WeatherPage> {
     DateFormat formatter = DateFormat("dd MMMM yyyy");
     currentDate = formatter.format(now);
 
-    _fetchWeather(null);
+    _fetchCityName();
+    _fetchCurrentWeather();
+    _fetchWeekForecast();
   }
 
   @override
@@ -84,7 +118,7 @@ class _WeatherPageState extends State<WeatherPage> {
             color: const Color.fromARGB(255, 93, 183, 231),
           ),
         ),
-        const SizedBox(height: 70),
+        const SizedBox(height: 40),
         SizedBox(
           width: 300,
           child: SearchBar(
@@ -94,18 +128,36 @@ class _WeatherPageState extends State<WeatherPage> {
             elevation: const MaterialStatePropertyAll<double>(1.0),
             hintText: "Enter city name...",
             onSubmitted: (value) {
-              _fetchWeather(value);
+              _updateCityName(value);
+              _fetchCurrentWeather();
+              _fetchWeekForecast();
             },
           ),
         ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 30),
         SizedBox(
             width: 350,
             child: CurrentWeatherCard(
               weather: _weather,
               currentDate: currentDate,
               weatherAnimation: getWeatherAnimation(_weather?.iconName),
-            ))
+            )),
+        const SizedBox(height: 30),
+        SizedBox(
+          height: 300,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: _forecast.length,
+            itemBuilder: (context, index) {
+              return ForecastWeatherCard(
+                forecast: _forecast[index],
+                animationName: getWeatherAnimation(_forecast[index].iconName),
+              );
+            },
+            separatorBuilder: (context, index) => const SizedBox(width: 10),
+          ),
+        ),
       ],
     )));
   }
