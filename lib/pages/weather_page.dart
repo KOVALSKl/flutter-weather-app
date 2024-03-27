@@ -87,7 +87,7 @@ class _WeatherPageState extends State<WeatherPage> {
         assetName = iconName ?? "01d";
     }
 
-    return "assets/images/$assetName.json";
+    return "images/$assetName.json";
   }
 
   @override
