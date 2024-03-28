@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -88,7 +90,7 @@ class _WeatherPageState extends State<WeatherPage> {
         assetName = iconName ?? "01d";
     }
 
-    return "$assetName.json";
+    return "images/$assetName.json";
   }
 
   @override
@@ -107,8 +109,9 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-            child: Column(
+        body: SingleChildScrollView(
+            child: Center(
+                child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
@@ -145,25 +148,35 @@ class _WeatherPageState extends State<WeatherPage> {
             )),
         const SizedBox(height: 30),
         SizedBox(
-            height: 300,
+            height: 250,
             width: (isDesktop(context)) ? 800 : 340,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: _forecast.length,
-                itemBuilder: (context, index) {
-                  return ForecastWeatherCard(
-                    forecast: _forecast[index],
-                    animationName:
-                        getWeatherAnimation(_forecast[index].iconName),
-                  );
-                },
-                separatorBuilder: (context, index) => const SizedBox(width: 20),
+              child: ScrollConfiguration(
+                behavior:
+                    ScrollConfiguration.of(context).copyWith(dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.trackpad,
+                  PointerDeviceKind.stylus
+                }),
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: _forecast.length,
+                  itemBuilder: (context, index) {
+                    return ForecastWeatherCard(
+                      forecast: _forecast[index],
+                      animationName:
+                          getWeatherAnimation(_forecast[index].iconName),
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 20),
+                ),
               ),
             )),
       ],
-    )));
+    ))));
   }
 }
