@@ -1,8 +1,11 @@
 import 'dart:ui';
+import "dart:io" show Platform;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_weather_app/config/keys.dart';
 import 'package:flutter_weather_app/models/weather_model.dart';
 import 'package:flutter_weather_app/services/weather_service.dart';
 import 'package:flutter_weather_app/utils/media_quaries.dart';
@@ -13,8 +16,6 @@ import 'package:lottie/lottie.dart';
 import '../widgets/current_weather_card.dart';
 import '../widgets/forecast_weather_card.dart';
 
-const API_KEY = "7a1947745118a5fca6d8e156f4724528";
-
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
 
@@ -23,7 +24,7 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  final _weatherService = WeatherService(API_KEY);
+  final _weatherService = WeatherService(openWeatherMapApiKey);
   Weather? _weather;
   List<ForecastWeather> _forecast = [];
   String? _cityName;
@@ -90,20 +91,32 @@ class _WeatherPageState extends State<WeatherPage> {
         assetName = iconName ?? "01d";
     }
 
-    return "images/$assetName.json";
+    return "$assetName.json";
   }
 
   @override
   void initState() {
     super.initState();
 
-    DateTime now = DateTime.now();
-    DateFormat formatter = DateFormat("dd MMMM yyyy");
-    currentDate = formatter.format(now);
-
     _fetchCityName();
     _fetchCurrentWeather();
     _fetchWeekForecast();
+
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat("dd MMMM yyyy");
+    currentDate = formatter.format(now);
+  }
+
+  SnackBar snackBarFactory(String text) {
+    return SnackBar(
+      content: Text(text),
+      elevation: 10,
+      behavior: SnackBarBehavior.floating,
+      width: 400,
+      showCloseIcon: true,
+      backgroundColor: Colors.red,
+      duration: Durations.extralong4,
+    );
   }
 
   @override
@@ -132,20 +145,30 @@ class _WeatherPageState extends State<WeatherPage> {
             elevation: const MaterialStatePropertyAll<double>(1.0),
             hintText: "Enter city name...",
             onSubmitted: (value) {
-              _updateCityName(value);
-              _fetchCurrentWeather();
-              _fetchWeekForecast();
+              if (value.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    snackBarFactory("City Name cannot be empty!"));
+              } else {
+                _updateCityName(value);
+                _fetchCurrentWeather();
+                _fetchWeekForecast();
+              }
             },
           ),
         ),
         const SizedBox(height: 30),
         SizedBox(
             width: 350,
-            child: CurrentWeatherCard(
-              weather: _weather,
-              currentDate: currentDate,
-              weatherAnimation: getWeatherAnimation(_weather?.iconName),
-            )),
+            child: ((_weather == null)
+                ? const SpinKitCircle(
+                    color: Color.fromARGB(255, 93, 183, 231),
+                    size: 50,
+                  )
+                : CurrentWeatherCard(
+                    weather: _weather,
+                    currentDate: currentDate,
+                    weatherAnimation: getWeatherAnimation(_weather?.iconName),
+                  ))),
         const SizedBox(height: 30),
         SizedBox(
             height: 250,
